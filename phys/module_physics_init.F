@@ -3352,19 +3352,31 @@ CHARACTER(LEN=8) :: name
                               FRC_URB2D, UTYPE_URB2D,config_flags%use_wudapt_lcz)  !urban
           
 
-               max_utype_urb2d = maxval(UTYPE_URB2D)*1.0
+!               max_utype_urb2d = maxval(UTYPE_URB2D)*1.0
+!#if ( defined( DM_PARALLEL ) && ( ! defined( STUBMPI ) ) )
+!               max_utype_urb2d = wrf_dm_max_real(max_utype_urb2d)
+!#endif
+!          IF (config_flags%use_wudapt_lcz.eq.0 .and. max_utype_urb2d.gt.3.0) THEN  !new LCZ
+!                 CALL wrf_error_fatal &
+!                 ('USING 10 WUDAPT LCZ WITHOUT URBPARM_LCZ.TBL. SET USE_WUDAPT_LCZ=1')
+!               ENDIF
+!               IF (config_flags%use_wudapt_lcz.eq.1 .and. max_utype_urb2d.le.3.0) THEN  ! new LCZ
+!                 CALL wrf_error_fatal &
+!                 ('USING URBPARM_LCZ.TBL WITH OLD 3 URBAN CLASSES. SET USE_WUDAPT_LCZ=0')
+!               ENDIF
+
+            max_landtype = maxval(IVGTYP)*1.0
 #if ( defined( DM_PARALLEL ) && ( ! defined( STUBMPI ) ) )
-               max_utype_urb2d = wrf_dm_max_real(max_utype_urb2d)
+            max_landtype = wrf_dm_max_real(max_landtype)
 #endif
-               IF (config_flags%use_wudapt_lcz.eq.0 .and. max_utype_urb2d.gt.3.0) THEN  !new LCZ
+             IF (config_flags%use_wudapt_lcz .eq. 0 .and. max_landtype .gt. 50.0) THEN  !new LCZ
                  CALL wrf_error_fatal &
                  ('USING 10 WUDAPT LCZ WITHOUT URBPARM_LCZ.TBL. SET USE_WUDAPT_LCZ=1')
-               ENDIF
-               IF (config_flags%use_wudapt_lcz.eq.1 .and. max_utype_urb2d.le.3.0) THEN  ! new LCZ
+             ENDIF
+             IF (config_flags%use_wudapt_lcz .eq. 1 .and. max_landtype .le. 50.0) THEN  ! new LCZ
                  CALL wrf_error_fatal &
                  ('USING URBPARM_LCZ.TBL WITH OLD 3 URBAN CLASSES. SET USE_WUDAPT_LCZ=0')
-               ENDIF
-
+             ENDIF
 
              ELSE
                 CALL wrf_error_fatal ( 'arguments not present for calling urban model' )
