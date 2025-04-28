@@ -1,4 +1,4 @@
-MODULE module_sf_bep_bem
+/MODULE module_sf_bep_bem
 #if defined(mpas)
 use mpas_atmphys_utilities, only: physics_error_fatal
 #define FATAL_ERROR(M) call physics_error_fatal( M )
@@ -1664,7 +1664,7 @@ do iz= kts,kte
 
 
        
-       do iz=1,nz_um !Compute the outdoor temperature 
+       do iz=1,nzu !Compute the outdoor temperature 
 	 tmp_u(iz)=pt_u(iz)*(pr_u(iz)/p0)**(rcp_u) 
        end do
 
